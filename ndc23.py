@@ -26,9 +26,7 @@ class Joueur :
     def update():
         if pyxel.btnp(pyxel.KEY_Q):
             pyxel.quit()
-            
-        self.vaisseau_x = 60
-        self.vaisseau_y = 60
+
 
     def draw():
         pyxel.cls(0)
