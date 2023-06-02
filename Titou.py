@@ -3,6 +3,7 @@ import pyxel
 import random
 import operator
 
+
 class Combat():
     
     def __init__(self):
@@ -11,21 +12,26 @@ class Combat():
         self.niv_ennemi=1
         self.choix=["+"]
         self.coef=3
-        self.range=[0,20]
+        self.range={"+": [0, 20], "-": [-20, 20], "*": [0, 100], "/": [0, 5] }
         self.result=[]
+        self.maxi=10
+        self.mini=1
             
     def calcul(self):
         resultat=None
-        a=random.randint(1, 10)
+        a=random.randint(self.mini, self.maxi)
         b=random.randint(1, 10)
         operateur=random.choice(self.choix)
+        ronge=self.range[operateur]
+        print(ronge)
+        
         print(a, operateur, b)
         resultat=round(self.operators[operateur](a, b))
         
         self.result.append(resultat)
         c=0
         while c<2:
-            temp=random.randint(self.range[0], self.range[1])
+            temp=random.randint(ronge[0], ronge[1])
             if temp!=resultat:
                 self.result.append(temp)
                 c+=1
@@ -51,28 +57,29 @@ class Combat():
          
     def leval(self):
         self.level+=1
-        if self.level%5==0:
+        if self.level%2==0:
             self.niv_ennemi+=1
             self.coef+=1
         
         if self.niv_ennemi==2:
             if "-" not in self.choix:
                 self.choix.append("-")
-            self.range=[-20, 20]
         if self.niv_ennemi==3:
             if "*" not in self.choix:
                 self.choix.append("*")
-            self.range=[-20, 100]
         if self.niv_ennemi==4:
             if "/" not in self.choix:
                 self.choix.append("/")
-            self.range=[-20, 100]
+        if self.niv_ennemi==5:
+            self.maxi=100
+            self.range["+"]=[0, 200]
+            self.range["-"]=[-200,200]
+            self.range["*"]=[0, 1000]
+            self.range["/"]=[0, 50]
+        
             
             
 combat=Combat()
 while combat.level<20:
     combat.calcul()
     
-
-
-
