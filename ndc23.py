@@ -1,4 +1,6 @@
-pip install -U pyxel
+import os
+os.system("pip install pyxel")
+
 import pyxel
 
 class Joueur : 
@@ -23,11 +25,16 @@ class Joueur :
         if pyxel.btn(pyxel.KEY_UP) and self.y>0:
             self.y += -1
 
-    def update():
-        if pyxel.btnp(pyxel.KEY_Q):
+    def update(self):
+        if pyxel.btnp(pyxel.KEY_ESCAPE):
             pyxel.quit()
+            
+        self.deplacement()
+            
 
-
-    def draw():
+    def draw(self):
         pyxel.cls(0)
-        pyxel.rect(10, 10, 20, 20, 11)
+        pyxel.rect(self.x, self.y, 20, 20, 11)
+        
+j = Joueur()
+
