@@ -51,18 +51,19 @@ class Joueur :
         if self.compteur >= 600:"""
     
     def chrono(self):
-        self.chrono_frames += 1
-        if self.chrono_frames >= 30:
-            self.chrono_frames = 0
+        self.chrono_frame += 1
+        if self.chrono_frame >= 30:
+            self.chrono_frame = 0
             self.chrono_seconde += 1
             
     def bonus_vie(self):
         if self.chrono_seconde % 120 == 0:
+            self.chrono_seconde += 1
             self.liste_bonus_vie.append([random.randint(10, 110), random.randint(10, 110)])
         
         for bonus_vie in self.liste_bonus_vie :
 
-            if self.x <= bonus_vie[0]+20 and self.y <= bonus_vie[1]+20 and self.x >= bonus_vie[0] and self.y >= bonus_vie[1]:
+            if self.x <= bonus_vie[0]+20 and self.y <= bonus_vie[1]+20 and self.x + 20 >= bonus_vie[0] and self.y + 20 >= bonus_vie[1]:
                 self.liste_bonus_vie.remove(bonus_vie)
                 self.vies += 1           
 
@@ -71,6 +72,8 @@ class Joueur :
             pyxel.quit()
             
         self.deplacement()
+        self.chrono()
+        self.bonus_vie()
 
     def draw(self):
         pyxel.cls(0)
@@ -82,3 +85,4 @@ class Joueur :
 
         
 j = Joueur()
+
