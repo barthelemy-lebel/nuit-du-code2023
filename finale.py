@@ -17,8 +17,8 @@ class Joueur:
         self.compteur = 0
         self.chrono_frame = 0
         self.chrono_seconde = 0
-        self.liste_bonus_vie = [[random.randint(10, 110), random.randint(10, 110)]]
-        self.vies = 0
+        self.liste_bonus_vie = [[random.randint(15, 200), random.randint(15, 200)]]
+        self.vies = 3
         self.level=1
         self.choix = ["+"]
         self.sortie = [16, 0, 48, 16]
@@ -76,7 +76,7 @@ class Joueur:
             self.y += 1
 
     def declanche_combat(self):
-        if self.compteur >= 100:
+        if self.compteur >=500:
             self.compteur = 0
             self.combat = Combat()
             self.combat.calcul(self.choix)
@@ -106,6 +106,8 @@ class Joueur:
 
                 elif str(self.combat.dico[self.reponse]) != str(self.combat.resultat):
                     print(False)
+                    self.vies-=1
+                    print(self.vies)
                     self.combat = None
 
     def chrono(self):
@@ -115,7 +117,7 @@ class Joueur:
             self.chrono_seconde += 1
 
     def bonus_vie(self):
-        if self.chrono_seconde % 120 == 0:
+        if self.chrono_seconde % 60 == 0:
             self.chrono_seconde += 1
             self.liste_bonus_vie.append([random.randint(10, 110), random.randint(10, 110)])
 
@@ -132,22 +134,31 @@ class Joueur:
 
         self.deplacement()
         self.chrono()
-        """self.bonus_vie()"""
+        self.bonus_vie()
         self.declanche_combat()
         self.reponse_check()
 
     def draw(self):
         if self.combat == None:
-            pyxel.cls(0)
-            pyxel.rect(self.x, self.y, 16, 16, 5)
-            """
-            for bonus_vie in self.liste_bonus_vie:
-                pyxel.rect(bonus_vie[0], bonus_vie[1], 20, 20, 4)"""
+            if self.vies>0:
+                pyxel.cls(0)
+                pyxel.rect(self.x, self.y, 16, 16, 5)
 
-            for i in range(len(self.niveau1)):
-                long = self.niveau1[i][3] - self.niveau1[i][1]
-                larg = self.niveau1[i][2] - self.niveau1[i][0]
-                pyxel.rect(self.niveau1[i][0], self.niveau1[i][1], larg, long, 8)
+                for bonus_vie in self.liste_bonus_vie:
+                    pyxel.rect(bonus_vie[0], bonus_vie[1], 20, 20, 4)
+
+                for i in range(len(self.niveau1)):
+                    long = self.niveau1[i][3] - self.niveau1[i][1]
+                    larg = self.niveau1[i][2] - self.niveau1[i][0]
+                    pyxel.rect(self.niveau1[i][0], self.niveau1[i][1], larg, long, 8)
+
+                pyxel.text(60, 8, "Vies :", 7)
+                pyxel.text(88, 8, str(self.vies), 7)
+
+            elif self.vies<=0:
+                pyxel.cls(0)
+                pyxel.text(100, 100, "Game Over", 7)
+
 
         else:
             pyxel.cls(10)
@@ -163,7 +174,6 @@ class Combat():
     def __init__(self):
         self.operators = {"+": operator.add, "-": operator.sub, "*": operator.mul, "/": operator.truediv}
         self.niv_ennemi = 1
-        self.coef = 3
         self.range = {"+": [0, 20], "-": [-20, 20], "*": [0, 100], "/": [0, 5]}
         self.result = []
         self.maxi = 10
@@ -202,7 +212,6 @@ class Combat():
         print("level", level)
         if level % 5 == 0:
             self.niv_ennemi += 1
-            self.coef += 1
             print("niv", self.niv_ennemi)
         if self.niv_ennemi == 2:
             choix="-"
